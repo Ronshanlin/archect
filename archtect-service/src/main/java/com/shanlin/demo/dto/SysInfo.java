@@ -8,8 +8,6 @@
  */
 package com.shanlin.demo.dto;
 
-import java.sql.Timestamp;
-
 /**
  * @author shanlin
  *
