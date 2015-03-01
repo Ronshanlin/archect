@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.shanlin.framework</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0</version>
+  </parent>
+  <groupId>com.shanlin.framework.web.pom</groupId>
+  <artifactId>archtect-pom</artifactId>
+  <packaging>pom</packaging>
+  <name>archtect-pom</name>
+  <description>the pom module of web project</description>
+  
+  <profiles>
+  	<profile>
+  		<id>dev</id>
+  		<activation>
+  			<activeByDefault>true</activeByDefault>
+  		</activation>
+  		<build>
+  			<filters>
+  				<filter>../${project.artifactId}/vars/dev.vars.properties</filter>
+  			</filters>
+  		</build>
+  	</profile>
+  	<profile>
+  		<id>test</id>
+  		<build>
+  			<filters>
+  				<filter>../${project.artifactId}/vars/test.vars.properties</filter>
+  			</filters>
+  		</build>
+  	</profile>
+  </profiles>
+  
+  <modules>
+  	<module>../archtect-service</module>
+  </modules>
+</project>
