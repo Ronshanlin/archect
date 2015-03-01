@@ -8,51 +8,56 @@
  */
 package com.shanlin.demo.invoker;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.stereotype.Service;
 
-import com.shanlin.demo.annotation.OpenApiMethod;
+import com.shanlin.demo.dto.CommonResult;
+import com.shanlin.demo.utils.Constants;
+import com.shanlin.demo.utils.JsonUtil;
 
 /**
  * @author shanlin
  *
  */
 @Service
-public class OpenApiServiceProxy{
-	public static final String DOT = ".";
-	
-	public String invoke(String name, Object... requestBody) throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		int lastDot = name.lastIndexOf(DOT);
-		String beanAnotationName = name.substring(0, lastDot);
-		String methodName = name.substring(++lastDot);
-		
-		System.out.println("classname="+beanAnotationName+"; methodName="+methodName);
-		
-		// 获取实例
-		Object serviceBean = OpenApiServiceFactory.getServiceByName(beanAnotationName);
-		// 获取待执行方法
-		Method[] methods = serviceBean.getClass().getMethods();
-		Method method = null;
-		for (Method tempMethod : methods) {
-			if (!tempMethod.isAnnotationPresent(OpenApiMethod.class)) {
-				continue;
-			}
-			
-			if (methodName.equals(tempMethod.getAnnotation(OpenApiMethod.class).value())) {
-				method = tempMethod;
-				break;
-			}
-		}
-		
-		if (method == null) {
-			throw new NoSuchMethodException("there is no such a method:" + methodName);
-		}
-		
-		String result = (String)method.invoke(serviceBean, requestBody);
-		
-		return result;
-	}
+public class OpenApiServiceProxy extends ApplicationObjectSupport{
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenApiServiceProxy.class);
+    /**
+     * 功能描述: 转发代理<br>
+     *
+     * @param name 执行方法名
+     * @param args 被代理执行方法的入参
+     * @return
+     * @throws Exception
+     */
+    public String invoke(String name, Object... args) throws Exception {
+        long startTime = System.nanoTime();
+        CommonResult commonResult = null;
+        OpenApiServiceBean serviceBean = OpenApiServiceFactory.getServiceBean(name);
+        if (serviceBean != null) {
+            // 获取class
+            Object proxy = super.getApplicationContext().getBean(serviceBean.getBeanName());
+            
+            // 获取方法
+            Method method = serviceBean.getMethod();
+            String result = null;
+            if (serviceBean.getMethodParamterCount() == Constants.ZERO) {
+                result = (String) method.invoke(proxy);
+            }else {
+                result = (String) method.invoke(proxy, args);
+            }
+            LOGGER.info("invoke time：{}ns",(System.nanoTime()-startTime));
+            return result;
+        }
+        
+        commonResult = new CommonResult();
+        commonResult.setIsSuccess(false);
+        commonResult.setReturnMsg("没有此方法");
+        
+        return JsonUtil.toJson(commonResult);
+    }
 }

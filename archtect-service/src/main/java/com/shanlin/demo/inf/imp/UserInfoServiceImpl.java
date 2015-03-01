@@ -20,7 +20,7 @@ import com.shanlin.demo.inf.UserInfoService;
  * @author shanlin
  */
 @Service
-@OpenApiService(value="open.userInfo", clazz=UserInfoServiceImpl.class)
+@OpenApiService(value="open.userInfo", clazz=UserInfoServiceImpl.class, alias = "")
 public class UserInfoServiceImpl implements UserInfoService{
 	Logger logger = LoggerFactory.getLogger(getClass());
 	

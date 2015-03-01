@@ -10,11 +10,16 @@ package com.shanlin.demo.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,10 +27,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.shanlin.demo.dto.Body;
+import com.shanlin.demo.dto.CommonResult;
 import com.shanlin.demo.dto.Input;
 import com.shanlin.demo.dto.SysInfo;
 import com.shanlin.demo.invoker.OpenApiServiceProxy;
-import com.shanlin.demo.invoker.ServiceAgent;
+import com.shanlin.demo.utils.JsonUtil;
 
 /**
  * @author shanlin
@@ -33,18 +39,15 @@ import com.shanlin.demo.invoker.ServiceAgent;
  */
 @Controller
 @RequestMapping("/open")
-public class OpenApiServiceRouter {
-	private static final Gson gson = new GsonBuilder().create();
+public class OpenApiServiceRouter extends BaseController{
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenApiServiceRouter.class);
 	
 	@Autowired
 	private OpenApiServiceProxy proxy;
 	
-	@Autowired
-	private ServiceAgent serviceAgent;
-	
-	@RequestMapping("/router")
-	public String route(HttpServletRequest request){
-		
+	@RequestMapping(value="/router", method=RequestMethod.POST)
+	public String route(HttpServletRequest request, HttpServletResponse response){
+		String result = null;
 		try {
 //			InputStream stream = request.getInputStream();
 //			StringBuffer sb = new StringBuffer();
@@ -56,22 +59,28 @@ public class OpenApiServiceRouter {
 //			System.out.println("request:"+sb);
 			
 			String params = request.getParameter("params");
-			System.out.println(params);
+			LOGGER.info("request datas:{}", params);
 			
-			JsonObject jsonObject = new JsonParser().parse(params).getAsJsonObject();
-			JsonElement sysJsonElement = jsonObject.get("sysInfo");
-			SysInfo sysInfo = gson.fromJson(sysJsonElement, SysInfo.class);
+			SysInfo sysInfo = JsonUtil.fromJson(params, SysInfo.class);
 			
-			//proxy.invoke(sysInfo.getName(), gson.toJson(jsonObject.get("body")));
-			serviceAgent.invoke(sysInfo.getName(), gson.toJson(jsonObject.get("body")));
+			result = proxy.invoke(sysInfo.getName(), params);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("发生异常", e);
+			CommonResult commonResult = new CommonResult();
+			commonResult.setIsSuccess(false);
+			commonResult.setReturnMsg("系统异常");
+			
+			result = JsonUtil.toJson(commonResult);
 		} 
 		
-		return "";
+		return super.ajax(response, result);
 	}
 	
+	
+	
+	
 	public static void main(String[] args) {
+		Gson gson = new GsonBuilder().create();
 		SysInfo sysInfo = new SysInfo();
 		sysInfo.setAppKey("apppppp");
 		sysInfo.setSign("e1t2v2er6f1");

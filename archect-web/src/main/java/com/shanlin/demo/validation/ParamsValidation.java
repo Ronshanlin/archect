@@ -25,13 +25,13 @@ import com.google.gson.GsonBuilder;
  *
  */
 @Component
-public class ParamsValidation<T> {
+public class ParamsValidation {
 	private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 	
 	@Autowired
 	private LocalValidatorFactoryBean validatorFactoryBean;
 	
-	public Errors validate(String json, Class<T> targetClass){
+	public <T> Errors validate(String json, Class<T> targetClass){
 		Assert.notNull(json,"json数据不能为空");
 		
 		T target = gson.fromJson(json, targetClass);

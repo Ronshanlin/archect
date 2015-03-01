@@ -13,6 +13,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.stereotype.Service;
+
 /**
  * <b>注：</b>此注解用于获取class，获取实例后将可能执行其中<br>
  * 的一些方法，但请注意：被执行的方法的返回值会被强制转为{@link String}
@@ -21,13 +23,19 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Service
 public @interface OpenApiService {
-	/**
-	 * 名字
-	 */
-	String value();
-	/**
-	 * 接口
-	 */
-	Class<?> clazz();
+    /**
+     * 名字,会覆盖注解{@link Service}中value
+     */
+    String value() default "";
+    /**
+     *  昵称
+     */
+    String alias();
+    /**
+     * 当前类
+     */
+    Class<?> clazz() default Void.class;
 }
+

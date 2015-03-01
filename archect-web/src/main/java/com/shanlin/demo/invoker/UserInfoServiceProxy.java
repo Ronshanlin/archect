@@ -15,13 +15,13 @@ import com.shanlin.demo.dto.Body;
 import com.shanlin.demo.validation.ParamsValidation;
 
 /**
- * @author shanlin
+ * @author shanlin 
  *
  */
 @Service
 public class UserInfoServiceProxy {
 	@Autowired
-	ParamsValidation<Body> paramsValidation;
+	ParamsValidation paramsValidation;
 	
 	public void validate(String json){
 		paramsValidation.validate(json, Body.class);
