@@ -16,23 +16,24 @@ import edu.uci.ics.crawler4j.url.WebURL;
  */
 public class MyCrawler extends WebCrawler {
 	  
-    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|bmp|gif|jpe?g|ico"  
-                    + "|png|tiff?|mid|mp2|mp3|mp4"  
-                    + "|wav|avi|mov|mpeg|ram|m4v|pdf"  
-                    + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+//    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|bmp|gif|jpe?g|ico"  
+//                    + "|png|tiff?|mid|mp2|mp3|mp4"  
+//                    + "|wav|avi|mov|mpeg|ram|m4v|pdf"  
+//                    + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+    private final static Pattern FILTERS = Pattern.compile(".*(\\.(bmp|gif|jpe?g|ico|swf))$");
     
-    private final static String URL_PREFIX = "*";
+    private final static String URL_PREFIX = "http://www.czyunliang.com/";
     private final static String URL_PREFIX_LIST = "*";
     
 	@Override
-	public boolean shouldVisit(Page page, WebURL url) {
+	public boolean shouldVisit(WebURL url) {
 		String href = url.getURL().toLowerCase();
-		if (FILTERS.matcher(href).matches() || href.startsWith(URL_PREFIX_LIST)
-				|| !href.startsWith(URL_PREFIX)) {
-			return false;
+		if (FILTERS.matcher(href).matches() && href.startsWith(URL_PREFIX)
+				/*|| !href.startsWith(URL_PREFIX)*/) {
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	@Override
