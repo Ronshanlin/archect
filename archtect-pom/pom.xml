@@ -4,6 +4,7 @@
     <groupId>com.shanlin.framework</groupId>
     <artifactId>parent</artifactId>
     <version>1.0</version>
+    <relativePath>../../parent/parent/pom.xml</relativePath>
   </parent>
   <groupId>com.shanlin.framework.web.pom</groupId>
   <artifactId>archtect-pom</artifactId>
@@ -19,7 +20,7 @@
   		</activation>
   		<build>
   			<filters>
-  				<filter>../${project.artifactId}/vars/dev.vars.properties</filter>
+  				<filter>../${project.parent.artifactId}/vars/dev.vars.properties</filter>
   			</filters>
   		</build>
   	</profile>
@@ -27,7 +28,7 @@
   		<id>test</id>
   		<build>
   			<filters>
-  				<filter>../${project.artifactId}/vars/test.vars.properties</filter>
+  				<filter>../${project.parent.artifactId}/vars/test.vars.properties</filter>
   			</filters>
   		</build>
   	</profile>
