@@ -38,6 +38,43 @@ public class BinaryUtil {
 		return list;
 	}
 	
+		private BinaryUtil(){
+		
+	}
+	/**
+	 * 拆分，如：26=16+8+2
+	 * 
+	 * @param target 大于0的整数
+	 * @return
+	 */
+	public static List<Integer> split(int target){
+		Assert.isTrue(target>0);
+		
+		return getNext(new ArrayList<Integer>(), target, 0);
+	}
+	/**
+	 * 转换
+	 * 
+	 * @param list
+	 * @param target
+	 * @param pos
+	 * @return
+	 */
+	private static List<Integer> getNext(List<Integer> list,int target,int pos){
+		int quotient = target/2;
+		int modulo = target%2;
+		
+		if (modulo == 1) {
+			list.add((int)Math.pow(2, pos));
+		}
+		
+		if (quotient != 0) {
+			list=getNext(list,quotient, ++pos);
+		}
+		
+		return list;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(getCombination(type1|type7|type8));
 	}
