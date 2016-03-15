@@ -1,4 +1,4 @@
-package com.suning.gcps.utils.mutithread;
+package com.shanlin.demo.utils.mutithread;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

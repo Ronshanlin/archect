@@ -1,6 +1,6 @@
-package com.suning.gcps.utils.mutithread;
+package com.shanlin.demo.utils.mutithread;
 
-import com.suning.gcps.exception.AppException;
+import com.shanlin.demo.exception.MyExecption;
 
 /**
  * 多线程分批执行回调函数<br> 
@@ -8,5 +8,5 @@ import com.suning.gcps.exception.AppException;
  * @author shazl
  */
 public interface MutiThreadCallback<T> {
-    public T call() throws AppException;
+    public T call() throws MyExecption;
 }

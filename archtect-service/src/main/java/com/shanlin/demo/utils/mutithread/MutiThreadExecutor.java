@@ -1,4 +1,4 @@
-package com.suning.gcps.utils.mutithread;
+package com.shanlin.demo.utils.mutithread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.suning.gcps.exception.AppException;
+import com.shanlin.demo.exception.MyExecption;
 
 /**
  * 多线程分批执行器<每个线程执行的任务不同><br>
@@ -39,11 +39,11 @@ public class MutiThreadExecutor<T> {
             // 创建线程
             runnable = new MutiThreadRunnable<T>(new MutiThreadCallback<T>() {
                 @Override
-                public T call() throws AppException {
+                public T call() throws MyExecption {
                     try {
                         return callback.call();
                     } catch (Exception e) {
-                        throw new AppException(e);
+                        throw new MyExecption(e);
                     }
                 }
             });
