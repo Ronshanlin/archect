@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
 public class TimeClient {
     
     public static void main(String[] args) {
-        int port = 99;
+        int port = 199;
         Socket socket = null;
         BufferedReader reader = null;
         BufferedWriter writer = null;
