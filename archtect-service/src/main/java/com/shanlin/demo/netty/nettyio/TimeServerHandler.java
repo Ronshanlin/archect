@@ -16,31 +16,38 @@ import io.netty.channel.ChannelHandlerContext;
  *
  */
 public class TimeServerHandler extends ChannelHandlerAdapter{
+    private int counter;
     
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf = (ByteBuf) msg;
-        byte[] reqBytes = new byte[buf.readableBytes()];
+//        ByteBuf buf = (ByteBuf) msg;
+//        byte[] reqBytes = new byte[buf.readableBytes()];
+//        
+//        buf.readBytes(reqBytes);
+//        
+//        String body = new String(reqBytes, "utf-8");
+        String body = (String) msg;
         
-        buf.readBytes(reqBytes);
-        
-        String body = new String(reqBytes, "utf-8");
-        System.out.println("the time server recevie:"+body);
+        System.out.println("the time server recevie:"+body+"; counter is:"+ ++counter);
         
         // 写出
-        String respMsg = "i am resp:"+new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String respMsg = "i am resp:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         ByteBuf resp = Unpooled.copiedBuffer(respMsg.getBytes());
-        ctx.write(resp);
+        ctx.writeAndFlush(resp);
     }
     
-    @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelReadComplete");
-        ctx.flush();
-    }
+//    @Skip
+//    @Override
+//    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+//        System.out.println("channelReadComplete");
+//        ctx.flush();
+//    }
     
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println("server err");
+        System.err.println(cause);
+        
         ctx.close();
     }
 }

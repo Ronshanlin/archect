@@ -37,8 +37,6 @@ public class TimeServer {
             // 绑定端口，同步等待返回
             ChannelFuture future = bootstrap.bind(port).sync();
             
-            
-            
             // 等待服务端监听端口关闭
             future.channel().closeFuture().sync();
         } finally {

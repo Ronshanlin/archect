@@ -13,40 +13,46 @@ import io.netty.channel.ChannelHandlerContext;
  *
  */
 public class TimeClientHandler extends ChannelHandlerAdapter{
-    
-    private final ByteBuf firstMsg;
-    
+    private byte[] req;
+    private int counter;
     /**
      * 
      */
     public TimeClientHandler() {
-        byte[] req = "time client request msg".getBytes();
-        
-        firstMsg = Unpooled.buffer(req.length);
-        firstMsg.writeBytes(req);
+        req = ("time client request msg"+System.getProperty("line.seperator")).getBytes();
     }
     
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.writeAndFlush(firstMsg);
+        ByteBuf buf = null;
+        
+        for (int i = 0; i < 100; i++) {
+            buf = Unpooled.buffer(req.length);
+            buf.writeBytes(req);
+            
+            ctx.writeAndFlush(req);
+        }
+        
     }
     
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("client channelRead");
+//        
+//        ByteBuf buf = (ByteBuf) msg;
+//        
+//        byte[] bytes = new byte[buf.readableBytes()];
+//        buf.readBytes(bytes);
+//        
+//        String body = new String(bytes, "utf-8");
+        String body = (String)msg;
         
-        ByteBuf buf = (ByteBuf) msg;
-        
-        byte[] bytes = new byte[buf.readableBytes()];
-        buf.readBytes(bytes);
-        
-        String body = new String(bytes, "utf-8");
-        
-        System.out.println("client receive response is:"+body);
+        System.out.println("client receive response is:"+body+"; counter is:"+ ++counter);
     }
     
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println("client err");
         System.err.println(cause);
         
         ctx.close();
