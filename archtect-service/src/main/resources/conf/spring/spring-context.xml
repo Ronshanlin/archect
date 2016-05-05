@@ -11,18 +11,7 @@
 	
 	<!-- <jee:jndi-lookup id="dataSource" jndi-name="java:jdbc/archtectDb"/> -->
 	<context:component-scan base-package="com.shanlin.demo"/>
-	
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="" />
-		<property name="url" value="" />
-		<property name="username" value="" />
-		<property name="password" value="" />
-	</bean>
-
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
-	
 	<bean id="validateFactory" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"></bean>
+    
+    <import resource="spring-db.xml"/>
 </beans>            
