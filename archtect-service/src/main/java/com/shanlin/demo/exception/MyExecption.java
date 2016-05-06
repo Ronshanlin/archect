@@ -16,4 +16,11 @@ public class MyExecption extends Exception {
     public MyExecption(Throwable e){
         super(e);
     }
+
+    /**
+     * @param string
+     */
+    public MyExecption(String msg) {
+        super(msg);
+    }
 }
